@@ -31,7 +31,7 @@ Each plugin in this repository registers a custom Agent Builder harness in Buzz 
 3. **Official CLIs installed and signed in with your own subscription:**
    - **Claude Code:** Install via Anthropic's official Windows installer, run `claude` once, and select **Claude account with subscription**.
    - **Google Antigravity:** Install Google Antigravity, sign in, and register the CLI on `PATH` with `agy install`.
-   - **Cursor Agent:** Install the official Cursor Agent CLI, run `cursor-agent login`, and verify with `cursor-agent status`.
+   - **Cursor Agent:** Install the official Cursor Agent CLI, run `cursor-agent login`, and verify with `cursor-agent status`. For agents in `default`, `plan`, or `ask` permission mode, add `{ "permissions": { "allow": ["Mcp(plugin-buzz-*-buzz:*)"], "deny": [] } }` to `<working folder>\.cursor\cli.json` (for example `%USERPROFILE%\.buzz\.cursor\cli.json`) so headless Cursor permits Buzz MCP tools without interactive approval.
 
 ```powershell
 # Verify all three CLIs are on PATH

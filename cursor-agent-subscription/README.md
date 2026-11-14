@@ -10,6 +10,11 @@ This Buzz folder plugin registers **Cursor Agent (Subscription)** as a first-cla
 - **Node.js:** Node.js `v20+` (verified on `v24.x`) on `PATH` for local verification scripts
 - **Official CLI:** Cursor Agent CLI (`cursor-agent.cmd` or `agent.cmd`) on `PATH`
 - **Subscription Sign-In:** Run `cursor-agent login` in PowerShell and verify with `cursor-agent status` (`Logged in as ...`)
+- **Workspace MCP Allow Rule (Required for `default` / `plan` / `ask` permission modes):** In the agent's working folder, create `<working folder>\.cursor\cli.json` (for example `%USERPROFILE%\.buzz\.cursor\cli.json`) with:
+  ```json
+  { "permissions": { "allow": ["Mcp(plugin-buzz-*-buzz:*)"], "deny": [] } }
+  ```
+  Without this rule, headless Cursor rejects every Buzz `send` call (`User rejected MCP: ...-send`) in non-`force` modes because there is no interactive terminal to approve it. This narrow rule approves only the per-turn Buzz MCP server; shell commands and file edits still follow the selected permission mode. (Cursor reads permission rules only from the workspace `.cursor\cli.json` or global `~/.cursor/cli-config.json`, not from `--plugin-dir`.)
 
 ```powershell
 cursor-agent --version

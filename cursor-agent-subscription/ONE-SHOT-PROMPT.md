@@ -11,7 +11,11 @@
    cursor-agent status
    # Confirm output includes: Logged in as ...
    ```
-4. **How installation works in Buzz:** Approve or install via **Settings > Plugins > Manage plugins > Add > Browse** (choose `%USERPROFILE%\buzz-subscription-harnesses\cursor-agent-subscription`).
+4. **Workspace Buzz MCP Allow Rule:** For agents running in **Default**, **Plan**, or **Ask** permission mode, ensure `<working folder>\.cursor\cli.json` (e.g., `%USERPROFILE%\.buzz\.cursor\cli.json`) allows the per-turn Buzz MCP server:
+   ```json
+   { "permissions": { "allow": ["Mcp(plugin-buzz-*-buzz:*)"], "deny": [] } }
+   ```
+5. **How installation works in Buzz:** Approve or install via **Settings > Plugins > Manage plugins > Add > Browse** (choose `%USERPROFILE%\buzz-subscription-harnesses\cursor-agent-subscription`).
 
 ---
 
@@ -112,9 +116,11 @@ Expose models covering:
 - **Other Cursor models:** `gpt-5.3-codex`, `gpt-5.6-sol-high`, `claude-opus-5-5-high`, `claude-opus-5-thinking-high`, `claude-fable-5-thinking-high`, `claude-sonnet-5-thinking-high`
 
 Critical session & reply rules:
+- For agents in `default`, `plan`, or `ask` permission mode, ensure `<working folder>\.cursor\cli.json` (e.g., `%USERPROFILE%\.buzz\.cursor\cli.json`) includes `{ "permissions": { "allow": ["Mcp(plugin-buzz-*-buzz:*)"], "deny": [] } }`. Headless Cursor reads permission rules only from the workspace `.cursor\cli.json` or `~/.cursor/cli-config.json` (not `--plugin-dir`), and without this narrow rule it rejects `send` calls in `default` mode.
 - Query `cursor-agent models` asynchronously via `refreshModels()` to populate the model selector automatically when new models ship, with the list above as `FALLBACK_MODELS`.
 - Cache `diagnose()` results for 5 minutes so `cursor-agent status` does not add extra startup latency before every turn.
-- Track `tool_call` events for Buzz `send` / `reply_in_subthread` and only set `state.sentBuzzMessage = true` on `event.subtype === "completed"` when `!toolCallFailed(event.tool_call)`.
+- Track `tool_call` events for Buzz `send` / `reply_in_subthread`: ignore `getMcpToolsToolCall` schema lookups by checking `Boolean(event.tool_call?.mcpToolCall)`, and only set `state.sentBuzzMessage = true` on `event.subtype === "completed"` when `!toolCallFailed(event.tool_call)`.
+- Instruct the agent in `systemPrompt` to stop immediately after its final `send` (`final: true`) without writing a closing summary, and to answer directly from context when no tools are needed.
 - Key sessions by `community.cursor-agent-subscription/session/${delivery.agent.key}/${encodeURIComponent(conversation.key)}`.
 - If a resumed turn fails, clear `sessionId` in storage for the next turn without auto-retrying the failed turn (preventing duplicate side effects).
 - Wrap `agents.storage.set` in `try / catch` so storage errors never fail a completed turn.
