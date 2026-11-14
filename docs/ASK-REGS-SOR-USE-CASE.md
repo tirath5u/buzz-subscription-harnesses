@@ -6,15 +6,15 @@
 
 ## 1. Context & Motivation
 
-In high-stakes regulatory Q&A (such as Title IV federal student aid regulations and institutional refund calculations), a single AI model can produce answers that appear fluent, authoritative, and completely persuasive—while citing non-existent regulatory subsections or subtly reversing statutory conditions.
+In high-stakes regulatory Q&A (here, Title IV federal student aid), a single AI model can produce answers that appear fluent, authoritative, and completely persuasive—while citing non-existent regulatory subsections or subtly reversing statutory conditions.
 
-Merging outputs from multiple models manually by copy-pasting between browser tabs worked to surface discrepancies, but the process took hours. This workflow formalizes multi-model cross-checking inside Buzz, giving each frontier model a defined role based on its empirical strengths.
+Merging outputs from multiple models manually by copy-pasting between browser tabs worked to surface discrepancies, but the process took hours. This workflow formalizes multi-model cross-checking inside Buzz, giving each model a defined role. The role assignments are a hypothesis about how each model behaves; the evaluation plan below tests whether they help.
 
 ---
 
 ## 2. Defined Model Roles
 
-Each model is assigned a specific operational mandate to prevent homogeneous groupthink:
+Each model gets one job, so they don't all make the same mistake the same way:
 
 | Participant | Model / Harness | Operational Role | Responsibility & Constraints |
 |---|---|---|---|
@@ -44,7 +44,7 @@ flowchart TD
 2. **Blind Independent Answers:** Initial drafts are generated independently across isolated threads (planned automation) to avoid early bias or anchoring.
 3. **Disagreement Mapping:** The system lists every substantive discrepancy between model interpretations, statutory scopes, or timeline calculations.
 4. **Citation Check Gate:** Every cited source is verified against primary regulatory text under a strict hierarchy:
-   $$\text{Statute (HEA)} > \text{Code of Federal Regulations (CFR)} > \text{Dear Colleague Letters (DCL)} > \text{FSA Handbook}$$
+   Statute (HEA) > Code of Federal Regulations (CFR) > Dear Colleague Letters (DCL) > FSA Handbook
    - **Hard Fail Rule:** A failed or fabricated citation immediately fails the corresponding answer.
    - **No Skipping:** Model agreement *never* skips the citation verification check; multiple models can share the same hallucinated citation.
 5. **Synthesis with Visible Disagreement:** The synthesizer compiles verified citations into a unified summary while keeping unresolved ambiguities explicitly visible.
@@ -74,6 +74,7 @@ To determine whether multi-model cross-checking provides a measurable accuracy i
 
 - **Status:** Not yet run.
 - Results and metrics will be published here upon completion of the evaluation suite.
+- **What would change the plan:** if the full loop doesn't beat the best single model on confident-wrong and fabricated-citation rates, I'll publish that and drop to the simplest arm that performs as well.
 
 ---
 
