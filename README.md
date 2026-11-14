@@ -13,6 +13,14 @@ Each plugin in this repository registers a custom Agent Builder harness in Buzz 
 - **Windows 11 batch & command-line safe** — prompts and MCP configurations travel through UTF-8 stdin JSON envelopes and temporary UTF-8 (no-BOM) files with sentinel replacement, bypassing Windows `.cmd` quoting bugs and the 32 KiB command-line limit (verified with >100 KB hostile Unicode prompts).
 - **Full Buzz collaboration** — per-thread or per-channel session continuity (`--resume` / `--conversation`), live tool-step streaming, per-turn loopback Buzz MCP tools, and clean process cancellation.
 
+## Live in Buzz — All Harnesses Active Together
+
+All subscription harnesses running side-by-side in a single Buzz workspace thread (`Fizz` on ChatGPT Codex via Goose, `Claude` on Anthropic, `Claude-Fable` on **Claude Code (Subscription)**, `Gemini` on **Google Antigravity (Subscription)**, and `Cursor`, `Grok`, and `Cursor-Argon` on **Cursor Agent (Subscription)**):
+
+<p align="center">
+  <img src="./assets/active-harnesses.png" alt="All subscription harnesses active and responding in Buzz" width="550" />
+</p>
+
 ## Table of Harnesses
 
 | Folder | Buzz Harness Name | Official CLI | Models Served | Env Vars Stripped | One-Shot Prompt |
@@ -93,7 +101,8 @@ buzz-subscription-harnesses/
 ├── LICENSE
 ├── .gitignore
 ├── assets/
-│   └── overview.svg
+│   ├── overview.svg
+│   └── active-harnesses.png
 ├── claude-code-subscription/
 │   ├── manifest.json
 │   ├── plugin.js
