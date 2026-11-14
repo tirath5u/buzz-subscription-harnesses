@@ -1,0 +1,42 @@
+{
+  "id": "community.claude-code-subscription",
+  "name": "Claude Code (Subscription)",
+  "apiVersion": 1,
+  "description": "Run the official logged-in Claude Code CLI as a Buzz agent on Windows.",
+  "discovery": {
+    "category": "agents",
+    "tags": ["Windows", "Claude", "subscription", "coding-agents"]
+  },
+  "host": {
+    "files": true,
+    "mcp": true,
+    "processes": [
+      {
+        "id": "claude",
+        "program": "powershell.exe",
+        "args": [
+          "-NoLogo",
+          "-NoProfile",
+          "-NonInteractive",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$ErrorActionPreference='Stop'; [Console]::InputEncoding=[Text.UTF8Encoding]::new($false); [Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); $OutputEncoding=[Text.UTF8Encoding]::new($false); $c=Get-Command claude.exe,claude.cmd -ErrorAction SilentlyContinue | Select-Object -First 1; if(-not $c){[Console]::Error.WriteLine('BUZZ_CLAUDE_NOT_FOUND'); exit 127}; $p=([Console]::In.ReadToEnd()|ConvertFrom-Json); $f=[IO.Path]::GetTempFileName(); try{[IO.File]::WriteAllText($f,[string]$p.mcpConfig,[Text.UTF8Encoding]::new($false)); $a=@($p.args|ForEach-Object{if($_ -eq '__BUZZ_MCP_CONFIG__'){$f}else{$_}}); & {$p.prompt}|& $c.Source @a; $x=$LASTEXITCODE}finally{Remove-Item -LiteralPath $f -Force -ErrorAction SilentlyContinue}; exit $x"
+        ]
+      },
+      {
+        "id": "diagnose",
+        "program": "powershell.exe",
+        "args": [
+          "-NoLogo",
+          "-NoProfile",
+          "-NonInteractive",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$ErrorActionPreference='SilentlyContinue'; [Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); $c=Get-Command claude.exe,claude.cmd | Select-Object -First 1; [ordered]@{found=[bool]$c; path=if($c){$c.Source}else{$null}; apiKeySet=[bool]$env:ANTHROPIC_API_KEY} | ConvertTo-Json -Compress"
+        ]
+      }
+    ]
+  }
+}

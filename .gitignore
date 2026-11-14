@@ -1,0 +1,34 @@
+# Logs and transcripts
+*.log
+logs/
+*.jsonl
+transcripts/
+
+# Temporary files and verification markers
+temp/
+tmp/
+.tmp/
+.scratch/
+*.tmp
+*.bak
+*.bak-*
+.launcher-injection-marker
+.antigravity-launcher-injection-marker
+.cursor-launcher-injection-marker
+buzz-claude-launcher-*
+buzz-antigravity-launcher-*
+buzz-cursor-launcher-*
+
+# Environment and credentials
+.env
+.env.*
+*.pem
+*.key
+*oauth*
+*credentials*
+*secret*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+node_modules/

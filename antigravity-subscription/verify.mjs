@@ -1,0 +1,16 @@
+import assert from "node:assert/strict";
+import { existsSync, readFileSync, rmSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { resolve } from "node:path";
+const manifest=JSON.parse(readFileSync(new URL("./manifest.json",import.meta.url),"utf8"));
+const launcher=manifest.host.processes.find((entry)=>entry.id==="antigravity");
+assert(launcher,"antigravity process declaration missing");
+const marker=resolve(".antigravity-launcher-injection-marker");
+rmSync(marker,{force:true});
+const hostile=`spaces \"quotes\"; $(Set-Content -LiteralPath '${marker}' -Value pwned) 🐝`;
+const input=`${JSON.stringify({event:"user",message:{content:hostile}})}\n`;
+const result=spawnSync(launcher.program,launcher.args,{input:JSON.stringify({args:["--version"],input,mcpConfig:'{"mcpServers":{}}',wrapperKey:"verify-hostile"}),encoding:"utf8"});
+assert(!existsSync(marker),"prompt text was interpreted by PowerShell");
+assert.equal(result.status,0,result.stderr||"launcher did not run Antigravity");
+assert.match(result.stdout,/\d+\.\d+\.\d+/,"launcher did not return Antigravity version");
+console.log("launcher verified: hostile JSON/NDJSON stayed data; Antigravity CLI started");

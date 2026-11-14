@@ -1,0 +1,60 @@
+{
+  "id": "community.cursor-agent-subscription",
+  "name": "Cursor Agent (Subscription)",
+  "apiVersion": 1,
+  "description": "Run the official logged-in Cursor Agent CLI as a Buzz agent on Windows.",
+  "discovery": {
+    "category": "agents",
+    "tags": [
+      "Windows",
+      "Cursor",
+      "subscription",
+      "coding-agents"
+    ]
+  },
+  "host": {
+    "files": true,
+    "mcp": true,
+    "processes": [
+      {
+        "id": "cursor",
+        "program": "powershell.exe",
+        "args": [
+          "-NoLogo",
+          "-NoProfile",
+          "-NonInteractive",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$ErrorActionPreference='Stop';[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);$OutputEncoding=[Text.UTF8Encoding]::new($false);$c=Get-Command cursor-agent.cmd,agent.cmd -EA 0|Select-Object -First 1;if(!$c){exit 127};$p=([Console]::In.ReadToEnd()|ConvertFrom-Json);$r=Join-Path $env:TEMP ('buzz-cursor-'+([string]$p.wrapperKey-replace'[^a-zA-Z0-9._-]','_'));$d=Join-Path $r '.cursor-plugin';New-Item -ItemType Directory $d -Force|Out-Null;try{[IO.File]::WriteAllText(\"$d\\plugin.json\",'{\"name\":\"buzz\",\"version\":\"1.0.0\",\"mcpServers\":\"./mcp.json\"}');[IO.File]::WriteAllText(\"$r\\mcp.json\",[string]$p.mcpConfig);$a=@($p.args|%{if($_-eq'__BUZZ_PLUGIN_DIR__'){$r}else{$_}});[string]$p.prompt|&$c.Source @a;exit $LASTEXITCODE}finally{Remove-Item $r -Recurse -Force -EA 0}"
+        ]
+      },
+      {
+        "id": "diagnose",
+        "program": "powershell.exe",
+        "args": [
+          "-NoLogo",
+          "-NoProfile",
+          "-NonInteractive",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$ErrorActionPreference='SilentlyContinue';[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);$c=Get-Command cursor-agent.cmd,agent.cmd -EA 0|Select-Object -First 1;$status=if($c){&$c.Source status 2>&1|Out-String}else{''};[ordered]@{found=[bool]$c;path=if($c){$c.Source}else{$null};apiKeySet=[bool]$env:CURSOR_API_KEY;loggedIn=($status-match'Logged in as');status=$status.Trim()}|ConvertTo-Json -Compress"
+        ]
+      },
+      {
+        "id": "cleanup",
+        "program": "powershell.exe",
+        "args": [
+          "-NoLogo",
+          "-NoProfile",
+          "-NonInteractive",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$k=[Console]::In.ReadToEnd();$k=$k-replace'[^a-zA-Z0-9._-]','_';Remove-Item (Join-Path $env:TEMP ('buzz-cursor-'+$k)) -Recurse -Force -EA 0"
+        ]
+      }
+    ]
+  }
+}
