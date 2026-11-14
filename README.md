@@ -9,6 +9,7 @@ Let the AI models you already use cross-check each other in one Buzz thread, so 
 - **Why build it:** Compare tools existed (side-by-side chat apps), but nothing I found ran the tools I already use as working agents that hand off and check each other in one thread.
 - **What it can do:** Surface disagreements, catch fabricated citations, cut copy-paste, and give each model a defined role.
 - **What it can't do:** Guarantee correctness, replace reading the regulation or a human reviewer, or catch a misreading every model shares. Windows 11 only. Each provider's terms apply.
+- **Status:** Working day to day on my Windows 11 machine, with Claude, ChatGPT and Cursor (Composer, Grok, Gemini Argon) agents working in one thread. The accuracy benefit is still a hypothesis: the evaluation below has not been run.
 - **Next:** Run my Ask Regs/SOR golden questions single-model vs. cross-check and publish the results, including if there's no difference. See [`docs/ASK-REGS-SOR-USE-CASE.md`](docs/ASK-REGS-SOR-USE-CASE.md) and [`DECISIONS.md`](DECISIONS.md).
 
 ![Buzz Subscription Harnesses Overview](./assets/overview.svg)
@@ -20,7 +21,8 @@ Each plugin in this repository registers a custom Agent Builder harness in Buzz 
 - **No API keys required or used** — environment variables (`ANTHROPIC_API_KEY`, `CURSOR_API_KEY`) are explicitly stripped from every child process so they can never override your subscription login.
 - **No credential scraping** — plugins never read, copy, log, or export stored OAuth tokens or credential files.
 - **Windows 11 batch & command-line safe** — prompts and MCP configurations travel through UTF-8 stdin JSON envelopes and temporary UTF-8 (no-BOM) files with sentinel replacement, bypassing Windows `.cmd` quoting bugs and the 32 KiB command-line limit (verified with >100 KB hostile Unicode prompts).
-- **Full Buzz collaboration** — per-thread or per-channel session continuity (`--resume`), live tool-step streaming, per-turn loopback Buzz MCP tools, and clean process cancellation.
+- **Full Buzz collaboration** — per-thread or per-channel session continuity (`--resume`), live tool-step streaming, per-turn loopback Buzz MCP tools, and cancellation (Buzz **Stop** kills the CLI process).
+- **Least-privilege tool approval** — headless CLIs can't show approval prompts, so only Buzz's own MCP tools are pre-approved (Claude: `--allowedTools mcp__buzz`; Cursor: a workspace rule, see Requirements). Shell and file edits still follow each agent's permission mode. A Buzz post counts as sent only after the tool reports success; otherwise the model's final text is posted instead, so an agent never goes silent.
 
 ## Live in Buzz — All Harnesses Active Together
 
@@ -35,7 +37,7 @@ ChatGPT Codex runs via Buzz's built-in Goose harness and Claude via Buzz's built
 | Folder | Buzz Harness Name | Official CLI | Models Served | Env Vars Stripped | One-Shot Prompt |
 |---|---|---|---|---|---|
 | [`claude-code-subscription/`](./claude-code-subscription/) | **Claude Code (Subscription)** | `claude` (`claude.exe` / `claude.cmd`) | Sonnet, Opus, Fable, Haiku (`claude-fable-5-2`, `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`) | `ANTHROPIC_API_KEY` | [`ONE-SHOT-PROMPT.md`](./claude-code-subscription/ONE-SHOT-PROMPT.md) |
-| [`cursor-agent-subscription/`](./cursor-agent-subscription/) | **Cursor Agent (Subscription)** | `cursor-agent` (`cursor-agent.cmd` / `agent.cmd`) | Serves **Composer** (`composer-2.5`, `composer-2.5-fast`), **Grok** (`grok-4.7-*`, `cursor-grok-4.6-*`, `cursor-grok-4.5-*`), and **Gemini Argon** (`gemini-4-argon-high`) models via Cursor | `CURSOR_API_KEY` | [`ONE-SHOT-PROMPT.md`](./cursor-agent-subscription/ONE-SHOT-PROMPT.md) |
+| [`cursor-agent-subscription/`](./cursor-agent-subscription/) | **Cursor Agent (Subscription)** | `cursor-agent` (`cursor-agent.cmd` / `agent.cmd`) | Every model your Cursor plan lists in `cursor-agent models`, read when the plugin starts, so new models appear without an update. Tested in Buzz: **Composer 2.5**, **Grok 4.7**, **Gemini 4 Argon** | `CURSOR_API_KEY` | [`ONE-SHOT-PROMPT.md`](./cursor-agent-subscription/ONE-SHOT-PROMPT.md) |
 
 > **Gemini:** Gemini 4 Argon is available through the Cursor Agent (Subscription) plugin; for direct Gemini use, Google recommends an AI Studio or Gemini Enterprise API key. (See [`DECISIONS.md`](DECISIONS.md) D4 & D5 on why the experimental Antigravity CLI plugin was removed).
 
@@ -58,14 +60,14 @@ cursor-agent status
 
 1. Clone this repository into `%USERPROFILE%\buzz-subscription-harnesses`:
    ```powershell
-   git clone https://github.com/tirath5u/buzz-subscription-harnesses.git "%USERPROFILE%\buzz-subscription-harnesses"
+   git clone https://github.com/tirath5u/buzz-subscription-harnesses.git "$env:USERPROFILE\buzz-subscription-harnesses"
    ```
 2. Run the local safety and large-prompt verification suite in each harness folder:
    ```powershell
-   cd "%USERPROFILE%\buzz-subscription-harnesses\claude-code-subscription"
+   cd "$env:USERPROFILE\buzz-subscription-harnesses\claude-code-subscription"
    node --check plugin.js; node verify.mjs; node verify-large-prompt.mjs
 
-   cd "%USERPROFILE%\buzz-subscription-harnesses\cursor-agent-subscription"
+   cd "$env:USERPROFILE\buzz-subscription-harnesses\cursor-agent-subscription"
    node --check plugin.js; node verify.mjs; node verify-large-prompt.mjs
    ```
 3. In Buzz, open **Settings > Plugins > Manage plugins**.
@@ -90,7 +92,8 @@ Each prompt bakes in every Windows 11 lesson learned:
 - Short temp wrapper keys to avoid Windows PowerShell 5.1's `MAX_PATH` (260-char) limit
 - Stripping `ANTHROPIC_API_KEY` and `CURSOR_API_KEY` from child processes
 - Completion-gated Buzz MCP send tracking so rejected tool calls still deliver a fallback text reply
-- Resilient session state persistence (`Map` + `try/catch` around `agents.storage.set`)
+- Pre-approval of Buzz MCP tools only (`--allowedTools mcp__buzz` for Claude; `Mcp(plugin-buzz-*-buzz:*)` workspace rule for Cursor)
+- Session IDs saved per conversation, where a failed save never turns a delivered answer into an error
 - Automated hostile-prompt injection and >100 KB prompt verification gates
 
 ## Repository Structure

@@ -35,7 +35,7 @@
   <text x="62" y="268" class="label">ISOLATION &amp; TRANSPORT</text>
   <text x="62" y="288" class="mono">• Strips ANTHROPIC_API_KEY from child processes</text>
   <text x="62" y="308" class="mono">• Temp UTF-8 no-BOM --mcp-config with __BUZZ_MCP_CONFIG__</text>
-  <text x="62" y="328" class="mono">• Resumes via --resume &lt;id&gt;; clean cancellation</text>
+  <text x="62" y="328" class="mono">• Resumes via --resume &lt;id&gt;; Stop cancels the turn</text>
   <rect x="62" y="356" width="456" height="36" rx="6" fill="#21262d" stroke="#30363d"/>
   <text x="180" y="379" class="mono">Test Claude subscription ✓</text>
 
