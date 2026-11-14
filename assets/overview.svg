@@ -7,11 +7,11 @@
     <style>
       .title { font: 700 24px 'Segoe UI', system-ui, sans-serif; fill: #f0f6fc; }
       .subtitle { font: 400 14px 'Segoe UI', system-ui, sans-serif; fill: #8b949e; }
-      .card-title { font: 600 17px 'Segoe UI', system-ui, sans-serif; fill: #f0f6fc; }
+      .card-title { font: 600 18px 'Segoe UI', system-ui, sans-serif; fill: #f0f6fc; }
       .badge { font: 600 11px 'Consolas', monospace; fill: #58a6ff; }
       .badge-green { font: 600 11px 'Consolas', monospace; fill: #3fb950; }
       .label { font: 600 12px 'Segoe UI', system-ui, sans-serif; fill: #8b949e; }
-      .mono { font: 400 12px 'Consolas', monospace; fill: #c9d1d9; }
+      .mono { font: 400 13px 'Consolas', monospace; fill: #c9d1d9; }
       .note { font: 400 12px 'Segoe UI', system-ui, sans-serif; fill: #c9d1d9; }
     </style>
   </defs>
@@ -23,58 +23,38 @@
   <text x="40" y="74" class="subtitle">Drive official signed-in CLIs as native Buzz agents via PowerShell UTF-8 stdin envelopes + per-turn loopback MCP</text>
 
   <!-- Card 1: Claude Code -->
-  <rect x="40" y="102" width="330" height="310" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1.5"/>
-  <rect x="58" y="122" width="96" height="22" rx="6" fill="#1f2937" stroke="#3b82f6" stroke-width="1"/>
-  <text x="70" y="137" class="badge">claude.cmd</text>
-  <rect x="164" y="122" width="90" height="22" rx="6" fill="#122d1f" stroke="#2ea043" stroke-width="1"/>
-  <text x="176" y="137" class="badge-green">Active</text>
-  <text x="58" y="172" class="card-title">Claude Code (Subscription)</text>
-  <text x="58" y="198" class="label">MODELS</text>
-  <text x="58" y="218" class="mono">• Sonnet / Opus / Fable / Haiku</text>
-  <text x="58" y="236" class="mono">• Claude Fable 5.2 / Opus 5.5</text>
-  <text x="58" y="266" class="label">ISOLATION &amp; TRANSPORT</text>
-  <text x="58" y="286" class="mono">• Strips ANTHROPIC_API_KEY</text>
-  <text x="58" y="304" class="mono">• Temp UTF-8 no-BOM --mcp-config</text>
-  <text x="58" y="322" class="mono">• Sentinel __BUZZ_MCP_CONFIG__</text>
-  <text x="58" y="340" class="mono">• Resumes via --resume &lt;id&gt;</text>
-  <rect x="58" y="362" width="294" height="32" rx="6" fill="#21262d" stroke="#30363d"/>
-  <text x="112" y="383" class="mono">Test Claude subscription ✓</text>
+  <rect x="40" y="102" width="500" height="310" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1.5"/>
+  <rect x="62" y="122" width="96" height="22" rx="6" fill="#1f2937" stroke="#3b82f6" stroke-width="1"/>
+  <text x="74" y="137" class="badge">claude.cmd</text>
+  <rect x="168" y="122" width="90" height="22" rx="6" fill="#122d1f" stroke="#2ea043" stroke-width="1"/>
+  <text x="180" y="137" class="badge-green">Active</text>
+  <text x="62" y="172" class="card-title">Claude Code (Subscription)</text>
+  <text x="62" y="198" class="label">MODELS</text>
+  <text x="62" y="218" class="mono">• Sonnet / Opus / Fable / Haiku</text>
+  <text x="62" y="238" class="mono">• Claude Fable 5.2 / Opus 5.5 / Sonnet 5.5 / Haiku 5.5</text>
+  <text x="62" y="268" class="label">ISOLATION &amp; TRANSPORT</text>
+  <text x="62" y="288" class="mono">• Strips ANTHROPIC_API_KEY from child processes</text>
+  <text x="62" y="308" class="mono">• Temp UTF-8 no-BOM --mcp-config with __BUZZ_MCP_CONFIG__</text>
+  <text x="62" y="328" class="mono">• Resumes via --resume &lt;id&gt;; clean cancellation</text>
+  <rect x="62" y="356" width="456" height="36" rx="6" fill="#21262d" stroke="#30363d"/>
+  <text x="180" y="379" class="mono">Test Claude subscription ✓</text>
 
-  <!-- Card 2: Google Antigravity -->
-  <rect x="395" y="102" width="330" height="310" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1.5"/>
-  <rect x="413" y="122" width="76" height="22" rx="6" fill="#1f2937" stroke="#3b82f6" stroke-width="1"/>
-  <text x="427" y="137" class="badge">agy.cmd</text>
-  <rect x="499" y="122" width="90" height="22" rx="6" fill="#122d1f" stroke="#2ea043" stroke-width="1"/>
-  <text x="511" y="137" class="badge-green">Active</text>
-  <text x="413" y="172" class="card-title">Google Antigravity (Sub)</text>
-  <text x="413" y="198" class="label">MODELS</text>
-  <text x="413" y="218" class="mono">• Gemini 3.8 Flash (High/Med/Low)</text>
-  <text x="413" y="236" class="mono">• Sonnet 4.6 / Opus 4.6 / GPT-OSS</text>
-  <text x="413" y="266" class="label">ISOLATION &amp; TRANSPORT</text>
-  <text x="413" y="286" class="mono">• Strips GEMINI &amp; GOOGLE_API_KEY</text>
-  <text x="413" y="304" class="mono">• Bypasses Gemini CLI UNSUPPORTED</text>
-  <text x="413" y="322" class="mono">• Ephemeral .agents/plugins/buzz</text>
-  <text x="413" y="340" class="mono">• Resumes via --conversation &lt;id&gt;</text>
-  <rect x="413" y="362" width="294" height="32" rx="6" fill="#21262d" stroke="#30363d"/>
-  <text x="450" y="383" class="mono">Test Antigravity subscription ✓</text>
-
-  <!-- Card 3: Cursor Agent -->
-  <rect x="750" y="102" width="330" height="310" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1.5"/>
-  <rect x="768" y="122" width="132" height="22" rx="6" fill="#1f2937" stroke="#3b82f6" stroke-width="1"/>
-  <text x="778" y="137" class="badge">cursor-agent.cmd</text>
-  <rect x="910" y="122" width="90" height="22" rx="6" fill="#122d1f" stroke="#2ea043" stroke-width="1"/>
-  <text x="922" y="137" class="badge-green">Active</text>
-  <text x="768" y="172" class="card-title">Cursor Agent (Subscription)</text>
-  <text x="768" y="198" class="label">MODELS SERVED VIA CURSOR</text>
-  <text x="768" y="218" class="mono">• Composer 2.5 &amp; Fast</text>
-  <text x="768" y="236" class="mono">• Grok 4.7 / 4.6 / 4.5</text>
-  <text x="768" y="254" class="mono">• Gemini 4 Argon High</text>
-  <text x="768" y="280" class="label">ISOLATION &amp; TRANSPORT</text>
-  <text x="768" y="298" class="mono">• Strips CURSOR_API_KEY</text>
-  <text x="768" y="316" class="mono">• Temp .cursor-plugin + mcp.json</text>
-  <text x="768" y="334" class="mono">• Resumes via --resume &lt;id&gt;</text>
-  <rect x="768" y="362" width="294" height="32" rx="6" fill="#21262d" stroke="#30363d"/>
-  <text x="822" y="383" class="mono">Test Cursor subscription ✓</text>
+  <!-- Card 2: Cursor Agent -->
+  <rect x="580" y="102" width="500" height="310" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1.5"/>
+  <rect x="602" y="122" width="132" height="22" rx="6" fill="#1f2937" stroke="#3b82f6" stroke-width="1"/>
+  <text x="612" y="137" class="badge">cursor-agent.cmd</text>
+  <rect x="744" y="122" width="90" height="22" rx="6" fill="#122d1f" stroke="#2ea043" stroke-width="1"/>
+  <text x="756" y="137" class="badge-green">Active</text>
+  <text x="602" y="172" class="card-title">Cursor Agent (Subscription)</text>
+  <text x="602" y="198" class="label">MODELS SERVED VIA CURSOR</text>
+  <text x="602" y="218" class="mono">• Composer 2.5 &amp; Composer 2.5 Fast</text>
+  <text x="602" y="238" class="mono">• Grok 4.7 / 4.6 / 4.5 variants</text>
+  <text x="602" y="258" class="mono">• Gemini 4 Argon High</text>
+  <text x="602" y="284" class="label">ISOLATION &amp; TRANSPORT</text>
+  <text x="602" y="304" class="mono">• Strips CURSOR_API_KEY from child processes</text>
+  <text x="602" y="324" class="mono">• Temp .cursor-plugin + mcp.json; pre-approved MCP allow-rule</text>
+  <rect x="602" y="356" width="456" height="36" rx="6" fill="#21262d" stroke="#30363d"/>
+  <text x="720" y="379" class="mono">Test Cursor subscription ✓</text>
 
   <!-- Footer Banner -->
   <rect x="40" y="432" width="1040" height="56" rx="10" fill="#161b22" stroke="#30363d" stroke-width="1"/>
